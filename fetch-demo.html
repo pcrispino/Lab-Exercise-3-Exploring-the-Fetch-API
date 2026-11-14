@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fetch API Demo</title>
+  </head>
+  <body>
+    <h2>Exploring the Fetch API</h2>
+
+    <h3>GET Request</h3>
+    <button id="loadData">Load Post Data</button>
+
+    <h3>POST Request</h3>
+    <button id="createPost">Create New Post</button>
+
+    <div
+      id="output"
+      style="margin-top: 20px; border: 1px solid #cccccc; padding: 10px"
+    >
+      Results will appear here.
+    </div>
+
+    <script>
+      // GET REQUEST
+      document
+        .getElementById("loadData")
+        .addEventListener("click", function () {
+          const output = document.getElementById("output");
+
+          output.innerHTML = "Loading post data...";
+
+          fetch("https://jsonplaceholder.typicode.com/posts/1")
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+              }
+
+              return response.json();
+            })
+            .then((data) => {
+              output.innerHTML = `
+                        <strong>GET Request Successful!</strong><br><br>
+                        <strong>Post Title:</strong> ${data.title}<br><br>
+                        <strong>Content:</strong> ${data.body}
+                    `;
+            })
+            .catch((error) => {
+              output.innerHTML = `
+                        <span style="color:red;">
+                            Error: ${error.message}
+                        </span>
+                    `;
+            });
+        });
+
+      // POST REQUEST
+      document
+        .getElementById("createPost")
+        .addEventListener("click", function () {
+          const output = document.getElementById("output");
+
+          output.innerHTML = "Creating new post...";
+
+          fetch("https://jsonplaceholder.typicode.com/posts", {
+            method: "POST",
+
+            headers: {
+              "Content-Type": "application/json",
+            },
+
+            body: JSON.stringify({
+              title: "New Post Created",
+              body: "Learning Fetch API is fun!",
+              PostId: 1,
+            }),
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+              }
+
+              return response.json();
+            })
+            .then((data) => {
+              output.innerHTML = `
+                        <strong>New Post Created!</strong><br><br>
+                        <strong>Title:</strong> ${data.title}<br>
+                        <strong>Content:</strong> ${data.body}<br>
+                        <strong>User ID:</strong> ${data.PostId}
+                    `;
+            })
+            .catch((error) => {
+              output.innerHTML = `
+                        <span style="color:red;">
+                            Error: ${error.message}
+                        </span>
+                    `;
+            });
+        });
+    </script>
+  </body>
+</html>
